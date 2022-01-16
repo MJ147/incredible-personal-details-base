@@ -13,6 +13,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
 	declarations: [AppComponent, PersonalDataListComponent],
@@ -28,6 +30,8 @@ import { MatIconModule } from '@angular/material/icon';
 		MatFormFieldModule,
 		MatTableModule,
 		MatIconModule,
+		MatButtonModule,
+		MatPaginatorModule,
 	],
 	providers: [],
 	bootstrap: [AppComponent],
