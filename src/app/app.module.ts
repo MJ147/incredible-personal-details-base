@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-import { PersonalDataListComponent } from './components/personal-data-list/personal-data-list.component';
+import { PersonalDetailsListComponent } from './components/personal-details-list/personal-details-list.component';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -15,9 +15,10 @@ import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { PersonalDetailsFormComponent } from './components/personal-details-form/personal-details-form.component';
 
 @NgModule({
-	declarations: [AppComponent, PersonalDataListComponent],
+	declarations: [AppComponent, PersonalDetailsListComponent, PersonalDetailsFormComponent],
 	imports: [
 		BrowserModule,
 		AppRoutingModule,

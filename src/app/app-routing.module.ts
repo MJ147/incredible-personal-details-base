@@ -1,10 +1,19 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { PersonalDataListComponent } from './components/personal-data-list/personal-data-list.component';
+import { PersonalDetailsFormComponent } from './components/personal-details-form/personal-details-form.component';
+import { PersonalDetailsListComponent } from './components/personal-details-list/personal-details-list.component';
 
 const routes: Routes = [
-	{ path: '', redirectTo: 'personal-details-list', pathMatch: 'full' },
-	{ path: 'personal-details-list', component: PersonalDataListComponent },
+	{
+		path: 'personal-details',
+		children: [
+			{ path: '', redirectTo: 'list', pathMatch: 'full' },
+			{ path: 'list', component: PersonalDetailsListComponent },
+			{ path: 'create', component: PersonalDetailsFormComponent },
+			{ path: 'edit', component: PersonalDetailsFormComponent },
+		],
+	},
+	{ path: '**', redirectTo: 'personal-details/list' },
 ];
 
 @NgModule({

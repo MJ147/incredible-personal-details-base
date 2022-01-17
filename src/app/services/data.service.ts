@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Filters, PersonalDetails } from '../models/personal-details';
 import { filter, find, map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
 	providedIn: 'root',
@@ -10,22 +10,28 @@ import { Observable } from 'rxjs';
 export class DataService {
 	private readonly _JSON_PATH: string = './assets/data/data.json';
 
-	constructor(private _http: HttpClient) {}
+	private _personalDetailsList: BehaviorSubject<PersonalDetails[]> = new BehaviorSubject<PersonalDetails[]>([]);
 
-	getPersonalDetails(filters: Partial<Filters>): Observable<PersonalDetails[]> {
-		return this._http.get<PersonalDetails[]>(this._JSON_PATH).pipe(
-			map((personalDetailsList) => {
-				return personalDetailsList.filter((personalDetails) => {
-					return personalDetails.name.includes(filters?.name ?? '') || personalDetails.company.includes(filters?.company ?? '');
-				});
-			}),
-		);
+	constructor(private _http: HttpClient) {
+		this.preparePersonalDetailsList();
 	}
 
-	getPersonalDetailsById(id: string): Observable<PersonalDetails | null> {
-		return this._http.get<PersonalDetails>(this._JSON_PATH).pipe(
-			find((personalDetails) => personalDetails.id === id),
-			map((personalDetails) => personalDetails ?? null),
-		);
+	preparePersonalDetailsList(): void {
+		this._http.get<PersonalDetails[]>(this._JSON_PATH).subscribe((data) => this._personalDetailsList.next(data));
 	}
+
+	getPersonalDetails(): Observable<PersonalDetails[]> {
+		return this._personalDetailsList;
+	}
+
+	// getPersonalDetailsById(id: string): Observable<PersonalDetails[] | null> {
+	// 	return this._personalDetailsList.pipe(
+	// 		find((personalDetails) => {
+	//             console.log(personalDetails);
+
+	// 			return personalDetails.id === id;
+	// 		}),
+	// 		map((personalDetails) => personalDetails ?? null),
+	// 	);
+	// }
 }

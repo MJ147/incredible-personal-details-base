@@ -5,19 +5,19 @@
         <form [formGroup]="filters">
             <mat-form-field appearance="outline" class="filter-field">
                 <mat-label>Name</mat-label>
-                <input matInput formControlName="name">
+                <input matInput formControlName="name" autocomplete="off">
             </mat-form-field>
             
             <mat-form-field appearance="outline" class="filter-field">
                 <mat-label>Company</mat-label>
-                <input matInput formControlName="company">
+                <input matInput formControlName="company" autocomplete="off">
             </mat-form-field>
         </form>
         
-        <button mat-raised-button class="clear-button"><mat-icon>close</mat-icon></button>
+        <button mat-raised-button class="clear-button" (click)="resetFilters()"><mat-icon>close</mat-icon></button>
     </div>
 
-    <table mat-table [dataSource]="personalDetailsList" class="mat-elevation-z8">
+    <table mat-table [dataSource]="filteredPersonalDetailsList" class="mat-elevation-z8">
         <ng-container matColumnDef="avatar">
             <th mat-header-cell *matHeaderCellDef> Avatar </th>
             <td mat-cell *matCellDef="let element"><img src="./assets/img/placehold-32x32.png" [alt]="element.avatarUrl"> </td>
@@ -41,5 +41,11 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
+
+    <mat-paginator [length]="filteredPersonalDetailsList.length"
+               [pageSize]="pageSize"
+               [pageSizeOptions]="pageSizeOptions"
+               (page)="pageEvent = $event">
+    </mat-paginator>
 </div>
 
