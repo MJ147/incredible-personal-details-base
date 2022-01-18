@@ -1,3 +1,5 @@
+import { SortingColumn } from './../enum/sortingColumn.enum';
+
 export interface PersonalDetails {
 	id: string;
 	avatarUrl: string;
@@ -14,4 +16,9 @@ export interface PersonalDetails {
 export interface Filters {
 	name: string;
 	company: string;
+}
+
+export interface Sorting {
+	column: SortingColumn;
+	isAsc: boolean;
 }

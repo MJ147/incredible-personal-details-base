@@ -14,7 +14,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatPaginatorModule } from '@angular/material/paginator';
 import { PersonalDetailsFormComponent } from './components/personal-details-form/personal-details-form.component';
 
 @NgModule({
@@ -32,7 +31,6 @@ import { PersonalDetailsFormComponent } from './components/personal-details-form
 		MatTableModule,
 		MatIconModule,
 		MatButtonModule,
-		MatPaginatorModule,
 	],
 	providers: [],
 	bootstrap: [AppComponent],

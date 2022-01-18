@@ -1,8 +1,8 @@
 import { DataService } from '../../services/data.service';
-import { PersonalDetails, Filters } from '../../models/personal-details';
-import { Component, OnInit } from '@angular/core';
+import { PersonalDetails, Filters, Sorting } from '../../models/personal-details';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { PageEvent } from '@angular/material/paginator';
+import { SortingColumn } from 'src/app/enum/sortingColumn.enum';
 
 @Component({
 	selector: 'app-personal-details-list',
@@ -19,12 +19,15 @@ export class PersonalDetailsListComponent implements OnInit {
 
 	personalDetailsList: PersonalDetails[] = [];
 	filteredPersonalDetailsList: PersonalDetails[] = [];
+	paginatedPersonalDetailsList: PersonalDetails[] = [];
 
-	pageSize = 10;
-	pageSizeOptions: number[] = [5, 10, 20, 40];
-	pageEvent: PageEvent | null = null;
+	currentPage = 1;
+	pageSize = 20;
+	sorting: Sorting = { column: SortingColumn.Name, isAsc: true };
 
-	constructor(private _formBuilder: FormBuilder, private _dataService: DataService) {}
+	SortingColumn: typeof SortingColumn = SortingColumn;
+
+	constructor(private _formBuilder: FormBuilder, private _dataService: DataService, private _cdr: ChangeDetectorRef) {}
 
 	ngOnInit(): void {
 		this._loadPersonalDetailsList();
@@ -42,6 +45,7 @@ export class PersonalDetailsListComponent implements OnInit {
 		this.filteredPersonalDetailsList = this.personalDetailsList.filter((personalDetails) => {
 			return personalDetails.name.includes(filters?.name ?? '') && personalDetails.company.includes(filters?.company ?? '');
 		});
+		this._paginatePersonalDetailsList();
 	}
 
 	private _onFiltersChange(): void {
@@ -50,7 +54,51 @@ export class PersonalDetailsListComponent implements OnInit {
 		});
 	}
 
+	private _paginatePersonalDetailsList(): void {
+		const firstPage = this.pageSize * (this.currentPage - 1);
+		this.paginatedPersonalDetailsList = this.filteredPersonalDetailsList.slice(firstPage, firstPage + this.pageSize);
+		this.sortPersonalDetailsList(this.sorting.column, this.sorting.isAsc);
+	}
+
+	sortPersonalDetailsList(column: SortingColumn, isAsc?: boolean): void {
+		let asc = 0;
+		if (isAsc) {
+			asc = -1;
+		} else {
+			asc = column !== this.sorting.column || this.sorting.isAsc ? -1 : 1;
+		}
+
+		this.filteredPersonalDetailsList.sort((a, b) => (a[column] < b[column] ? asc : -asc));
+
+		this.sorting = { column, isAsc: asc === 1 };
+	}
+
 	resetFilters(): void {
 		this.filters.reset();
+	}
+
+	changePage(move: number | null = null, newNumber: number | null = null) {
+		let pageNumber = 0;
+
+		if (newNumber != null) {
+			this.currentPage = newNumber;
+			return;
+		}
+
+		if (move == null) {
+			return;
+		}
+
+		pageNumber = this.currentPage + move;
+
+		if (pageNumber >= this.filteredPersonalDetailsList.length / 20) {
+			pageNumber = this.filteredPersonalDetailsList.length / 20;
+		} else if (pageNumber <= 1) {
+			pageNumber = 1;
+		}
+
+		this.currentPage = pageNumber;
+
+		this._paginatePersonalDetailsList();
 	}
 }
