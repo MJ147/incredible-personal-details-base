@@ -14,6 +14,7 @@ const routes: Routes = [
 			{ path: 'preview/:id', component: PersonalDetailsFormComponent },
 		],
 	},
+	{ path: '**', redirectTo: 'personal-details/list' },
 ];
 
 @NgModule({

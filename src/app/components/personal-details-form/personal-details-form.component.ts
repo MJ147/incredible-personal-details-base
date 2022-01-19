@@ -18,6 +18,7 @@ export class PersonalDetailsFormComponent implements OnInit {
 	headerText: string = '';
 	submitButtonText: string = '';
 	confirmSnackBarText: string = '';
+	matButtonIcon: string = '';
 
 	form = this._formBuilder.group({
 		name: this._formBuilder.control('', [Validators.required]),
@@ -39,10 +40,16 @@ export class PersonalDetailsFormComponent implements OnInit {
 
 	ngOnInit(): void {
 		this._route.url.subscribe((url) => {
+			this.setFormMode(url[0].path);
 			this.id = this._route.snapshot.params.id ?? '';
 
-			this.setFormMode(url[0].path);
-			this.setTexts(this.formMode);
+			if (this.formMode !== FormMode.Add) {
+				this._dataService.getPersonalDetailsById(this.id).subscribe((personalDetails) => {
+					this.form.patchValue(personalDetails ?? {});
+				});
+			}
+
+			this.prepareComponentMode(this.formMode);
 		});
 	}
 
@@ -64,12 +71,13 @@ export class PersonalDetailsFormComponent implements OnInit {
 		}
 	}
 
-	setTexts(formMode: FormMode): void {
+	prepareComponentMode(formMode: FormMode): void {
 		switch (formMode) {
 			case FormMode.Edit:
 				this.headerText = 'Edit personal details';
 				this.submitButtonText = 'Save';
 				this.confirmSnackBarText = 'Changes has been saved';
+				this.matButtonIcon = 'save';
 				break;
 
 			case FormMode.Preview:
@@ -78,10 +86,14 @@ export class PersonalDetailsFormComponent implements OnInit {
 				break;
 
 			default:
-				this.headerText = 'Add new person data';
+				this.headerText = 'Add personal details';
 				this.submitButtonText = 'Add';
-				this.confirmSnackBarText = 'New person data has been added';
-				break;
+				this.confirmSnackBarText = 'Personal details have been added';
+				this.matButtonIcon = 'add';
 		}
+	}
+
+	get isPreviewMode(): boolean {
+		return this.formMode === FormMode.Preview;
 	}
 }

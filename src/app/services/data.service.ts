@@ -24,14 +24,15 @@ export class DataService {
 		return this._personalDetailsList;
 	}
 
-	// getPersonalDetailsById(id: string): Observable<PersonalDetails[] | null> {
-	// 	return this._personalDetailsList.pipe(
-	// 		find((personalDetails) => {
-	//             console.log(personalDetails);
-
-	// 			return personalDetails.id === id;
-	// 		}),
-	// 		map((personalDetails) => personalDetails ?? null),
-	// 	);
-	// }
+	getPersonalDetailsById(id: string): Observable<PersonalDetails | null> {
+		return this._personalDetailsList.pipe(
+			map((personalDetailList) => {
+				return (
+					personalDetailList.find((personalDetails) => {
+						return personalDetails.id === id;
+					}) || null
+				);
+			}),
+		);
+	}
 }

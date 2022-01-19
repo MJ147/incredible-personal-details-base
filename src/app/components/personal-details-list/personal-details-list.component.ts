@@ -53,7 +53,7 @@ export class PersonalDetailsListComponent implements OnInit {
 		this.filteredPersonalDetailsList = this.personalDetailsList.filter((personalDetails) => {
 			return (
 				personalDetails.name.toLocaleLowerCase().includes(filters?.name?.toLocaleLowerCase() ?? '') &&
-				personalDetails.company.includes(filters?.company ?? '')
+				personalDetails.company.toLocaleLowerCase().includes(filters?.company?.toLocaleLowerCase() ?? '')
 			);
 		});
 		this.sortPersonalDetailsList(this.sorting.column, this.sorting.isAsc);

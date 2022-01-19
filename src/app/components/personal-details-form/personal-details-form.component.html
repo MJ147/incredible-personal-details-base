@@ -2,11 +2,13 @@
     <button class="back-button" mat-mini-fab [routerLink]="['/personal-details','list']">
         <mat-icon>arrow_back</mat-icon>
     </button> 
-    {{ headerText }} 
+    Personal details form 
 </mat-toolbar>
 
-<div class="content">
-    <form [formGroup]="form" class="mat-elevation-z8">
+<div class="content mat-elevation-z8" >
+    <mat-toolbar>{{ headerText }}</mat-toolbar>
+
+    <form [formGroup]="form" [ngStyle]="{'pointer-events': isPreviewMode && 'none'}">
         <mat-form-field appearance="outline" class="filter-field">
             <mat-label>Name</mat-label>
             <input matInput formControlName="name" autocomplete="off">
@@ -38,6 +40,6 @@
         </mat-form-field>
     </form>
 
-    <button mat-raised-button color="accent" class="submit-button" (click)="submitForm()"><mat-icon>done</mat-icon><span>{{ submitButtonText.toUpperCase() }}</span></button>
+    <button mat-raised-button color="accent" class="submit-button" *ngIf="!isPreviewMode" (click)="submitForm()"><mat-icon>{{ matButtonIcon }}</mat-icon><span>{{ submitButtonText.toUpperCase() }}</span></button>
 </div>
 
