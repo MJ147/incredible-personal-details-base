@@ -1,8 +1,12 @@
 import { DataService } from '../../services/data.service';
 import { PersonalDetails, Filters, Sorting } from '../../models/personal-details';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { SortingColumn } from 'src/app/enum/sortingColumn.enum';
+import { MatDialog } from '@angular/material/dialog';
+import { DeletePopupComponent } from '../popups/delete-popup/delete-popup.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-personal-details-list',
@@ -15,8 +19,6 @@ export class PersonalDetailsListComponent implements OnInit {
 		company: this._formBuilder.control(''),
 	});
 
-	displayedColumns: string[] = ['avatar', 'name', 'company', 'actions'];
-
 	personalDetailsList: PersonalDetails[] = [];
 	filteredPersonalDetailsList: PersonalDetails[] = [];
 	paginatedPersonalDetailsList: PersonalDetails[] = [];
@@ -27,7 +29,13 @@ export class PersonalDetailsListComponent implements OnInit {
 
 	SortingColumn: typeof SortingColumn = SortingColumn;
 
-	constructor(private _formBuilder: FormBuilder, private _dataService: DataService, private _cdr: ChangeDetectorRef) {}
+	constructor(
+		private _formBuilder: FormBuilder,
+		private _dataService: DataService,
+		private _matDialog: MatDialog,
+		private _matSnackBar: MatSnackBar,
+		private _router: Router,
+	) {}
 
 	ngOnInit(): void {
 		this._loadPersonalDetailsList();
@@ -43,9 +51,12 @@ export class PersonalDetailsListComponent implements OnInit {
 
 	private _filterPersonalDetailsList(filters: Partial<Filters>): void {
 		this.filteredPersonalDetailsList = this.personalDetailsList.filter((personalDetails) => {
-			return personalDetails.name.includes(filters?.name ?? '') && personalDetails.company.includes(filters?.company ?? '');
+			return (
+				personalDetails.name.toLocaleLowerCase().includes(filters?.name?.toLocaleLowerCase() ?? '') &&
+				personalDetails.company.includes(filters?.company ?? '')
+			);
 		});
-		this._paginatePersonalDetailsList();
+		this.sortPersonalDetailsList(this.sorting.column, this.sorting.isAsc);
 	}
 
 	private _onFiltersChange(): void {
@@ -57,13 +68,12 @@ export class PersonalDetailsListComponent implements OnInit {
 	private _paginatePersonalDetailsList(): void {
 		const firstPage = this.pageSize * (this.currentPage - 1);
 		this.paginatedPersonalDetailsList = this.filteredPersonalDetailsList.slice(firstPage, firstPage + this.pageSize);
-		this.sortPersonalDetailsList(this.sorting.column, this.sorting.isAsc);
 	}
 
 	sortPersonalDetailsList(column: SortingColumn, isAsc?: boolean): void {
 		let asc = 0;
-		if (isAsc) {
-			asc = -1;
+		if (isAsc != null) {
+			asc = this.sorting.isAsc === isAsc ? -1 : 1;
 		} else {
 			asc = column !== this.sorting.column || this.sorting.isAsc ? -1 : 1;
 		}
@@ -71,28 +81,20 @@ export class PersonalDetailsListComponent implements OnInit {
 		this.filteredPersonalDetailsList.sort((a, b) => (a[column] < b[column] ? asc : -asc));
 
 		this.sorting = { column, isAsc: asc === 1 };
+		this.changePage(0, this.currentPage);
 	}
 
-	resetFilters(): void {
-		this.filters.reset();
-	}
-
-	changePage(move: number | null = null, newNumber: number | null = null) {
-		let pageNumber = 0;
+	changePage(move: number, newNumber: number | null = null) {
+		let pageNumber = this.currentPage;
 
 		if (newNumber != null) {
-			this.currentPage = newNumber;
-			return;
+			pageNumber = newNumber;
 		}
 
-		if (move == null) {
-			return;
-		}
+		pageNumber += move;
 
-		pageNumber = this.currentPage + move;
-
-		if (pageNumber >= this.filteredPersonalDetailsList.length / 20) {
-			pageNumber = this.filteredPersonalDetailsList.length / 20;
+		if (pageNumber >= this.lastPage) {
+			pageNumber = this.lastPage;
 		} else if (pageNumber <= 1) {
 			pageNumber = 1;
 		}
@@ -100,5 +102,31 @@ export class PersonalDetailsListComponent implements OnInit {
 		this.currentPage = pageNumber;
 
 		this._paginatePersonalDetailsList();
+	}
+
+	deletePersonalDetails(personalDetails: PersonalDetails): void {
+		this._matDialog
+			.open<DeletePopupComponent, string>(DeletePopupComponent, {
+				data: personalDetails.name,
+				autoFocus: false,
+			})
+			.afterClosed()
+			.subscribe((isConfirm) => {
+				if (isConfirm) {
+					const idx = this.personalDetailsList.indexOf(personalDetails);
+					this.personalDetailsList.splice(idx, 1);
+
+					this._filterPersonalDetailsList(this.filters.value);
+					this._matSnackBar.open('Element has been deleted');
+				}
+			});
+	}
+
+	resetFilters(): void {
+		this.filters.reset();
+	}
+
+	get lastPage(): number {
+		return Math.ceil(this.filteredPersonalDetailsList.length / this.pageSize);
 	}
 }

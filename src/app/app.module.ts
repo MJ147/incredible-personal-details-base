@@ -15,14 +15,19 @@ import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { PersonalDetailsFormComponent } from './components/personal-details-form/personal-details-form.component';
+import { DeletePopupComponent } from './components/popups/delete-popup/delete-popup.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule, MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
-	declarations: [AppComponent, PersonalDetailsListComponent, PersonalDetailsFormComponent],
+	declarations: [AppComponent, PersonalDetailsListComponent, PersonalDetailsFormComponent, DeletePopupComponent],
 	imports: [
 		BrowserModule,
 		AppRoutingModule,
 		BrowserAnimationsModule,
 		HttpClientModule,
+		RouterModule,
 
 		MatToolbarModule,
 		ReactiveFormsModule,
@@ -31,8 +36,10 @@ import { PersonalDetailsFormComponent } from './components/personal-details-form
 		MatTableModule,
 		MatIconModule,
 		MatButtonModule,
+		MatDialogModule,
+		MatSnackBarModule,
 	],
-	providers: [],
+	providers: [{ provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } }],
 	bootstrap: [AppComponent],
 })
 export class AppModule {}

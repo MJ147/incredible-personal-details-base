@@ -1,1 +1,43 @@
-<p>personal-details-form works!</p>
+<mat-toolbar>
+    <button class="back-button" mat-mini-fab [routerLink]="['/personal-details','list']">
+        <mat-icon>arrow_back</mat-icon>
+    </button> 
+    {{ headerText }} 
+</mat-toolbar>
+
+<div class="content">
+    <form [formGroup]="form" class="mat-elevation-z8">
+        <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name" autocomplete="off">
+        </mat-form-field>
+        
+        <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Company</mat-label>
+            <input matInput formControlName="company" autocomplete="off">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Address</mat-label>
+            <input matInput formControlName="address" autocomplete="off">
+        </mat-form-field>
+    
+        <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>About</mat-label>
+            <input matInput formControlName="about" autocomplete="off">
+        </mat-form-field>
+    
+        <mat-form-field appearance="outline" class="filter-field" >
+            <mat-label>Tags</mat-label>
+            <input matInput formControlName="tags" autocomplete="off">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" autocomplete="off">
+        </mat-form-field>
+    </form>
+
+    <button mat-raised-button color="accent" class="submit-button" (click)="submitForm()"><mat-icon>done</mat-icon><span>{{ submitButtonText.toUpperCase() }}</span></button>
+</div>
+

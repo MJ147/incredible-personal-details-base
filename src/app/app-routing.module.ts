@@ -9,11 +9,11 @@ const routes: Routes = [
 		children: [
 			{ path: '', redirectTo: 'list', pathMatch: 'full' },
 			{ path: 'list', component: PersonalDetailsListComponent },
-			{ path: 'create', component: PersonalDetailsFormComponent },
-			{ path: 'edit', component: PersonalDetailsFormComponent },
+			{ path: 'add', component: PersonalDetailsFormComponent },
+			{ path: 'edit/:id', component: PersonalDetailsFormComponent },
+			{ path: 'preview/:id', component: PersonalDetailsFormComponent },
 		],
 	},
-	{ path: '**', redirectTo: 'personal-details/list' },
 ];
 
 @NgModule({

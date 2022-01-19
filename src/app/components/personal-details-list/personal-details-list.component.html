@@ -19,11 +19,11 @@
         </div>
 
         <div class="paginator">
-            <mat-icon class="clickable" (click)="currentPage = 1">first_page</mat-icon>
+            <mat-icon class="clickable" (click)="changePage(0, 1)">first_page</mat-icon>
             <mat-icon class="clickable" (click)="changePage(-1)">keyboard_arrow_left</mat-icon>
-            <div class="text">{{ currentPage }}/{{ filteredPersonalDetailsList.length / pageSize }}</div> 
+            <div class="text">{{ currentPage }}/{{ lastPage }}</div> 
             <mat-icon class="clickable" (click)="changePage(1)">keyboard_arrow_right</mat-icon>
-            <mat-icon class="clickable" (click)="currentPage = (filteredPersonalDetailsList.length / pageSize)">last_page</mat-icon>
+            <mat-icon class="clickable" (click)="changePage(0, lastPage)">last_page</mat-icon>
         </div>
     </div>
 
@@ -32,14 +32,17 @@
             <th> Avatar </th>
             <th (click)="sortPersonalDetailsList(SortingColumn.Name)" class="clickable"> Name </th>
             <th (click)="sortPersonalDetailsList(SortingColumn.Company)" class="clickable"> Company </th>
-            <th> <button mat-mini-fab><mat-icon>add</mat-icon></button> </th>
+            <th> <button mat-mini-fab [routerLink]="['/personal-details','add']"><mat-icon>add</mat-icon></button> </th>
         </tr>      
 
         <tr *ngFor="let person of paginatedPersonalDetailsList">
             <td><img src="./assets/img/placehold-32x32.png" [alt]="person.avatarUrl"> </td>
             <td> {{person.name}} </td>
             <td> {{person.company}} </td>
-            <td><mat-icon class="clickable">edit</mat-icon><mat-icon class="clickable">delete</mat-icon></td>         
+            <td>
+                <mat-icon class="clickable" [routerLink]="['/personal-details','edit', person.id]">edit</mat-icon>
+                <mat-icon class="clickable" (click)="deletePersonalDetails(person)">delete</mat-icon>
+            </td>         
         </tr>     
         <tr *ngIf="filteredPersonalDetailsList.length === 0">
            <td colspan="4" class="no-data">No data matching the searching</td>
