@@ -1,7 +1,11 @@
 import { SortingColumn } from './../enum/sortingColumn.enum';
 
-export interface PersonalDetails {
+export interface PersonalDetails extends PersonalDetailsAdd {
 	id: string;
+	createdAt: number;
+}
+
+export interface PersonalDetailsAdd {
 	avatarUrl: string;
 	name: string;
 	company: string;
@@ -9,7 +13,6 @@ export interface PersonalDetails {
 	phone: string;
 	address: string;
 	about: string;
-	createdAt: number;
 	tags: string[];
 }
 

@@ -34,7 +34,6 @@ export class PersonalDetailsListComponent implements OnInit {
 		private _dataService: DataService,
 		private _matDialog: MatDialog,
 		private _matSnackBar: MatSnackBar,
-		private _router: Router,
 	) {}
 
 	ngOnInit(): void {
@@ -78,7 +77,7 @@ export class PersonalDetailsListComponent implements OnInit {
 			asc = column !== this.sorting.column || this.sorting.isAsc ? -1 : 1;
 		}
 
-		this.filteredPersonalDetailsList.sort((a, b) => (a[column] < b[column] ? asc : -asc));
+		this.filteredPersonalDetailsList.sort((a, b) => (a[column].toLowerCase() < b[column].toLowerCase() ? asc : -asc));
 
 		this.sorting = { column, isAsc: asc === 1 };
 		this.changePage(0, this.currentPage);

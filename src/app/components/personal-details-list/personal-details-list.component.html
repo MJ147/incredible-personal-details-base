@@ -35,13 +35,14 @@
             <th> <button mat-mini-fab [routerLink]="['/personal-details','add']"><mat-icon>add</mat-icon></button> </th>
         </tr>      
 
-        <tr *ngFor="let person of paginatedPersonalDetailsList">
+        <tr *ngFor="let person of paginatedPersonalDetailsList" class="clickable-row" [routerLink]="['/personal-details','preview', person.id]">
             <td><img src="./assets/img/placehold-32x32.png" [alt]="person.avatarUrl"> </td>
             <td> {{person.name}} </td>
             <td> {{person.company}} </td>
             <td>
+                <mat-icon class="clickable" (click)="deletePersonalDetails(person); $event.stopPropagation()">delete</mat-icon>
                 <mat-icon class="clickable" [routerLink]="['/personal-details','edit', person.id]">edit</mat-icon>
-                <mat-icon class="clickable" (click)="deletePersonalDetails(person)">delete</mat-icon>
+                <mat-icon class="clickable">chevron_right</mat-icon>
             </td>         
         </tr>     
         <tr *ngIf="filteredPersonalDetailsList.length === 0">
